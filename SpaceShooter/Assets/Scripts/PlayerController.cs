@@ -12,17 +12,35 @@ public class PlayerController : MonoBehaviour {
 
     public float speed;
     public float tilt;
-
+    public float fireRate;
     public Boundary boundary;
+    public GameObject shot;
+    public Transform shotSpawn;
+
+    private float nextFire;
     private Rigidbody rb;
+    private AudioSource ac;
 
 	// Use this for initialization
 	void Start () {
+        nextFire = 0.0f;
         rb = GetComponent<Rigidbody>();
+        ac = GetComponent<AudioSource> ();
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate ()
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButton("Fire1") && Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+            ac.Play();
+        }
+    }
+
+    // Update is called upon physics interaction
+    void FixedUpdate ()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
